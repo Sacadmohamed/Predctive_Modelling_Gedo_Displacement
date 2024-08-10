@@ -1,4 +1,4 @@
-# Predctive_Modelling_Gedo_Displacement
+# Predictive_Modelling_Gedo_Displacement
 This project develops several regression models to predict displacement in the Gedo region, Somalia. It compares and evaluates several models: Linear Regression, Decision Tree Regression, and Random Forest Regression. The best-performing model is then selected and used to predict displacement.
 
 ## Tools
@@ -81,3 +81,127 @@ forest_predictions <- predict(forest_model, newdata = test_data)
 
 ```
 ![Random_Forest](https://github.com/user-attachments/assets/3e2b7c0b-1ec8-4349-a744-3c502d38fb63)
+
+
+## Calculating Performance Metrics
+``` R
+# Calculate performance metrics for decision tree regression
+tree_performance <- data.frame(
+  RMSE = sqrt(mean((tree_predictions - test_data$Displacement)^2)),
+  MAE = mean(abs(tree_predictions - test_data$Displacement))
+)
+
+# Calculate performance metrics for linear regression
+linear_performance <- data.frame(
+  RMSE = sqrt(mean((linear_predictions - test_data$Displacement)^2)),
+  MAE = mean(abs(linear_predictions - test_data$Displacement))
+)
+
+# Calculate performance metrics for random forest regression
+forest_performance <- data.frame(
+  RMSE = sqrt(mean((forest_predictions - test_data$Displacement)^2)),
+  MAE = mean(abs(forest_predictions - test_data$Displacement))
+)
+```
+
+## Building User Interface (ui) Side 
+``` R
+# Define UI
+ui <- dashboardPage(
+  dashboardHeader(title = "Displacement Prediction Dashboard"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Regression Analysis", tabName = "regression_analysis"),
+      menuItem("Error Visualization", tabName = "error_visualiz"),
+      menuItem("Displacement Predictor", tabName = "displacement_predictor")
+      
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      # Regression Analysis tab
+      tabItem(tabName = "regression_analysis",
+              fluidRow(
+                box(
+                  title = "Decision Tree Regression",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 6,
+                  plotOutput("tree_plot")
+                ),
+                box(
+                  title = "Linear Regression",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 6,
+                  plotOutput("linear_plot")
+                )
+              ),
+              fluidRow(
+                box(
+                  title = "Random Forest Regression",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 12,
+                  plotOutput("forest_plot")
+                )
+              )
+              
+      ),
+      
+      
+      ### Error Visualization Tab
+      tabItem(tabName = "error_visualiz",
+              fluidRow(
+                box(
+                  title = "Performance Metrics",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 12,
+                  tableOutput("performance_table")
+                )
+              ),
+              
+              fluidRow(
+                box(
+                  title = "Root Mean Square Error",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 12,
+                  plotOutput("RMSE_error")
+                )
+              ),
+              
+              fluidRow(
+                box(
+                  title = "Mean Absolute Error",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 12,
+                  plotOutput("MAE_error")
+                )
+              )
+              
+              
+      ),
+      
+      # Displacement Predictor tab
+      tabItem(tabName = "displacement_predictor",
+              fluidRow(
+                box(
+                  title = "Displacement Predictor",
+                  status = "info",
+                  solidHeader = TRUE,
+                  width = 12,
+                  numericInput("week_input", "Number of Weeks in the Year:", value = NULL),
+                  selectInput("reason_input", "Reason of Displacement:", choices = unique(All_data$Reason)),
+                  actionButton("predict_button", "Predict"),
+                  textOutput("prediction_output")
+                )
+              )
+      )
+    )
+  )
+)
+
+```
