@@ -17,3 +17,21 @@ library(randomForest)
 library(ggplot2)
 
 ```
+
+## Loading Data
+``` R
+# Read data
+All_data <- read_excel("UNHCR-PRMN-Displacement-Dataset.xlsx", sheet = "Sheet1")
+```
+
+### Data Processing
+``` R
+# Column renaming
+All_data$Displacement <- All_data$`Number of Individuals`
+
+# Convert the reason column to a factor
+All_data$Reason <- as.factor(All_data$Reason)
+
+All_data$Weekyear <- as.numeric(All_data$Weekyear)
+
+```
