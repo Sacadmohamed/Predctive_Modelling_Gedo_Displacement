@@ -35,3 +35,49 @@ All_data$Reason <- as.factor(All_data$Reason)
 All_data$Weekyear <- as.numeric(All_data$Weekyear)
 
 ```
+## Set the seed
+``` R
+# Set a seed for reproducibility
+set.seed(123)
+```
+## Data Splitting
+``` R
+# Split the data into training and testing sets
+train_indices <- createDataPartition(All_data$Displacement, p = 0.8, list = FALSE)
+train_data <- All_data[train_indices, ]
+test_data <- All_data[-train_indices, ]
+```
+
+## 1: Decision Tree Model
+``` R
+# Train a decision tree model
+tree_model <- rpart(Displacement ~ Weekyear + Reason, data = train_data)
+
+# Make predictions on the testing set using the decision tree model
+tree_predictions <- predict(tree_model, newdata = test_data)
+
+```
+![DecisionTree](https://github.com/user-attachments/assets/e8a415ed-0ebb-417c-93df-6bcfd6affadc)
+
+
+## 2: Linear Regression Model
+``` R
+# Train a linear regression model
+linear_model <- lm(Displacement ~ Weekyear + Reason, data = train_data)
+
+# Make predictions on the testing set using the linear regression model
+linear_predictions <- predict(linear_model, newdata = test_data)
+```
+![Linear_Regression](https://github.com/user-attachments/assets/c2210dbf-a626-41ce-a3db-30fe1f54d7e2)
+
+
+## 3: Random Forest Model
+``` R
+# Train a random forest model
+forest_model <- randomForest(Displacement ~ Weekyear + Reason, data = train_data)
+
+# Make predictions on the testing set using the random forest model
+forest_predictions <- predict(forest_model, newdata = test_data)
+
+```
+![Random_Forest](https://github.com/user-attachments/assets/3e2b7c0b-1ec8-4349-a744-3c502d38fb63)
